@@ -1,0 +1,72 @@
+spring:
+  profiles:
+    active: dev # 激活使用哪一个配置文件
+  aop:
+    proxy-target-class: true # 开启aop代理
+    # file upload config start
+  servlet:
+    multipart:
+      enabled: true
+      resolve-lazily: false
+      file-size-threshold: 0
+      location: temp
+      max-file-size: 10MB
+      max-request-size: 20MB
+    # file upload config end
+  #thymeleaf start
+  thymeleaf:
+    mode: HTML5
+    encoding: UTF-8
+    cache: false
+    servlet:
+      content-type: text/html
+  #thymeleaf end
+
+  mvc:
+    static-path-pattern: /static/**
+
+  # jdbc_config datasource start
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      pool-name: DatebookHikariCP
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  # jdbc_config datasource end
+  
+server:
+  tomcat:
+    max-swallow-size: 4MB
+  servlet:
+    context-path: /epoch-app-api # 设置工程的默认访问context-path
+
+#actuator 管理
+management:
+  server:
+    port: 9111
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always #显示健康具体信息  默认不会显示详细信息
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /monitor
+
+# mybatis
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.epoch.model.**.*
+  configuration:
+    cache-enabled: false
+
+logging:
+  config: classpath:logback-spring.xml
